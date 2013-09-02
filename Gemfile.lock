@@ -213,4 +213,5 @@ DEPENDENCIES
   chefspec (= 2.0.1)
   foodcritic (= 2.2.0)
   knife-spork (= 1.2.1)
+  minitest-chef-handler (= 1.0.1)
   rake (= 10.1.0)

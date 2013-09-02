@@ -46,12 +46,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-    config.vm.provider :vmware_fusion do |vb, override|
-      vb.gui = false
-      override.vm.box_url = "https://dl.dropbox.com/u/5721940/vagrant-boxes/vagrant-centos-6.4-x86_64-vmware_fusion.box"
-      vb.vmx["memsize"] = "2048"
-      #vb.customize ["modifyvm", :id, "--memory", "1024"]
-    end
+  config.vm.provider :aws do |aws, override| 
+    override.vm.box = 'dummy'
+    aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
+    aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+    aws.ami = 'ami-5bc28e32'
+    aws.security_groups = ['sg-cfa6bca3']
+    aws.subnet_id = 'subnet-989960f0'
+    aws.keypair_name = 'ardrone'
+
+    override.ssh.username = 'ec2-user'
+    override.ssh.private_key_path = '~/.ssh/ardrone.pem'
+  end
+
+  config.vm.provider :vmware_fusion do |vb, override|
+    vb.gui = false
+    override.vm.box_url = "https://dl.dropbox.com/u/5721940/vagrant-boxes/vagrant-centos-6.4-x86_64-vmware_fusion.box"
+    vb.vmx["memsize"] = "2048"
+  end
+
+  config.vm.provider :virtual_box do |vb, override|
+    override.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130427.box"
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
   #
   # View the documentation for the provider you're using for more
   # information on available options.
@@ -83,6 +100,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
+   
    config.vm.provision :chef_solo do |chef|
      chef.cookbooks_path = "./cookbooks"
      chef.add_recipe "motd"
