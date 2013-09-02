@@ -1,5 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+#require 'minitest-chef-handler'
+#report_handlers << MiniTest::Chef::Handler.new
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -81,16 +83,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
-  # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
-  #   chef.roles_path = "../my-recipes/roles"
-  #   chef.data_bags_path = "../my-recipes/data_bags"
-  #   chef.add_recipe "mysql"
-  #   chef.add_role "web"
-  #
-  #   # You may also specify custom JSON attributes:
-  #   chef.json = { :mysql_password => "foo" }
-  # end
+   config.vm.provision :chef_solo do |chef|
+     chef.cookbooks_path = "./cookbooks"
+     chef.add_recipe "motd"
+     chef.add_recipe "minitest-handler"
+  
+     # You may also specify custom JSON attributes:
+     chef.json = { 
+       :company => "swoop", 
+       :pci => {
+         :in_scope => false
+       } 
+     }
+   end
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
